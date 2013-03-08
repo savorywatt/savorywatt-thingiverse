@@ -33,9 +33,10 @@ tooth_width = 3;
 // Determines where the nut will rest, based on a percentage
 channel_position =70; // [0:100]
 
+//Select what part you want to export - make your own build plates
 part = "assembled"; // [assembled:Assembled, bottom:Bottom, top:Top, west:West Wall, east:East Wall, north:North Wall, south:South Wall]
 
-// preview[view:south, tilt:top]
+// preview[view:south, tilt:top diagonal]
 print_part();
 
 module print_part() {
