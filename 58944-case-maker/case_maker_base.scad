@@ -86,6 +86,9 @@ fn = 40;
 //
 // Basic Case design
 //
+// print_me() - an attempt to make a plate
+// mill_me() - will take the plate and make a projection
+// assemble() - will assemble the box for preview
 /////////////////////////////////////////
 
 module east_wall()
@@ -199,6 +202,33 @@ module assembled()
 
 
 }
+
+module mill_me()
+{
+	projection(cut = true){
+	bottom();
+	
+	translate([mill_space,0,0])
+	rotate([0,0,90])
+	east_wall();
+
+	mirror([1,0,0])
+	translate([mill_space,0,0])
+	rotate([0,0,90])
+	east_wall();
+
+	translate([0,-mill_space, 0])
+	south_wall();
+
+	translate([0,mill_space, 0])
+	north_wall();
+
+	translate([0, main_y/2 + wall_height + mill_space,0])
+	top();
+	}
+	
+}
+
 
 
 module print_me()
