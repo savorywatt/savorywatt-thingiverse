@@ -21,8 +21,8 @@ main_y = board_y + material_thickness + main_buffer/2;
 main_z = material_thickness;
 
 //mill_me();
-//assembled();  
-print_me();
+assembled();  
+//print_me();
 //board();
 module mounting_holes(){
 	offset =  -6;

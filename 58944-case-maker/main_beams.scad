@@ -1,23 +1,48 @@
-include <retaining_nut.scad>;
 ///////////////////////////////////////////////////////////
+/// Copyright 2013 Ross Hendrickson
 ///
-///
-///
+///  BSD License
 ///
 /////////////////////////////////////////////////////////
 
+test();
 
+///////////////////////////
+//Customizer Variables
+///////////////////////////
+
+material_z = 1.5;
+
+retain_screw_od = 2;
+retain_screw_height = 5;
+
+retain_nut_od = 4.5;
+retain_nut_height = 1.7;
+anchor_width = 2;
+
+//Position where the nut should be in the channel
+channel_top = 0.5;
+channel_bottom = 1 - channel_top;
+
+////////////////////////////////
+//Non-Customizer Variables
+////////////////////////////////
+
+//Related to anchors and harbors
+buffer = 0.1;
+anchor_target_width = material_z;
+harbor_offset = material_z;
+harbor_width = anchor_width*2 + retain_screw_od + buffer;
 
 module test()
 {
 	//North, East, South, West
-	pylons = [3,2,4,2];
+	pylons = [3,2,1,2];
 	types = [1,0,1,0];
-	offsets = [5,-10,0,-20];
-	offcenters = [4,4,-15,5];
+	offsets = [0,0,0,0];
+	offcenters = [0,0,0,0];
 	generate_cube([100,110,1], true, pylons, types, offsets, offcenters);	
 }
-
 
 module generate_negative_grid(dim, p, t, offsets = [0,0,0,0],  offcenters = [0,0,0,0])
 {
@@ -325,3 +350,96 @@ module fake_pylon()
 {
 	cube(pylon_width, center = true);
 }
+
+
+
+module anchors()
+{
+	y_off =  retain_screw_height/2 + anchor_target_width/2;
+	translate([0,- retain_screw_height/2,0])
+	union(){
+	
+	translate([retain_screw_od/2 + anchor_width/2, y_off, 0])
+	color("Red")
+	cube([anchor_width, anchor_target_width, material_z], center = true);
+	
+	translate([-(retain_screw_od/2 + anchor_width/2), y_off, 0])
+	color("Orange")
+	cube([anchor_width, anchor_target_width, material_z], center = true);
+	}
+}
+
+module shaft(){
+
+	translate([0, - (retain_screw_height - anchor_target_width)/2,0])
+	union()
+	{
+	//nut trap
+	translate([0, -((retain_screw_height - anchor_target_width )/2 - ((retain_screw_height - anchor_target_width ) * channel_bottom)), 0])
+	cube([retain_nut_od, retain_nut_height, material_z], center = true);
+
+	//main pillar
+	color("Blue")
+	cube([retain_screw_od, retain_screw_height - anchor_target_width, material_z], center = true);
+
+	}
+}
+
+module pylon()
+{
+	union()
+	{
+	translate([0, - (retain_screw_height - anchor_target_width)/2,0])
+	shaft();
+	translate([0,- retain_screw_height/2,0])
+	anchors();
+	}
+	
+}
+
+module harbor()
+{
+	color("White")
+	cube([harbor_width, anchor_target_width, material_z], center = true);
+}
+
+
+module main()
+{
+	translate([0, cube_y + 5, 0])
+	color("Brown")
+	difference()
+	{
+	cube([cube_x, cube_y/1.25, anchor_target_width], center = true);
+	translate([0, (cube_y/2) , 0]) 
+	harbor();
+	}
+	
+	union()
+	{
+	difference()
+	{
+	cube([cube_x,cube_y,material_z], center = true);
+	translate([0,(cube_y/2),0])
+	shaft();
+	}
+
+	translate([0,(cube_y/2),0])
+	anchors();
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
