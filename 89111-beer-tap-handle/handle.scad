@@ -8,7 +8,7 @@ use <write/Write.scad>
 // Configuration
 ///////////////////////
 
-words = "Special Blend";
+words = "Orange Julius";
 default = "Wil O Licious";
 handle_id = 10;
 bottom_pillar_height = 30;
